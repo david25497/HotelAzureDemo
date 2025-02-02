@@ -1,0 +1,22 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+FileContentIndex/
+v17/
+projectEvaluation/
+
+# Otros archivos de configuración que pueden ser innecesarios
+/.github/
+/HotelUltraGroup.Presentation.API/appsettings.json
+/HotelUltraGroup.Presentation.API/appsettings.Development.json
+/HotelUltraGroup.Presentation.API/Properties/PublishProfiles/FTPProfile.pubxml
+/HotelUltraGroup.Presentation.API/Properties/PublishProfiles/FTPProfile.pubxml

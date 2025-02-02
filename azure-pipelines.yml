@@ -1,0 +1,56 @@
+trigger:
+- main  # O la rama en la que quieres que se ejecute el pipeline
+
+pool:
+  vmImage: 'ubuntu-latest'  # O 'windows-latest' si prefieres un entorno de Windows
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+# Paso 1: Instalar el SDK de .NET Core
+- task: UseDotNet@2
+  displayName: 'Instalar .NET SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+# Paso 2: Restaurar dependencias
+- task: DotNetCoreCLI@2
+  displayName: 'Restaurar dependencias'
+  inputs:
+    command: 'restore'
+    projects: 'HotelUltraGroup.Presentation.API/HotelUltraGroup.Presentation.API.csproj'  # Ruta a tu proyecto específico
+
+# Paso 3: Publicar el proyecto
+- task: DotNetCoreCLI@2
+  displayName: 'Publicar el proyecto'
+  inputs:
+    command: 'publish'
+    projects: 'HotelUltraGroup.Presentation.API/HotelUltraGroup.Presentation.API.csproj'  # Ruta a tu proyecto específico
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/publish'
+    publishWebProjects: true  # Activar la publicación de un proyecto web
+
+# Paso intermedio: Listar el contenido de Build.ArtifactStagingDirectory y la subcarpeta 'publish'
+- script: |
+    echo "Contenido de Build.ArtifactStagingDirectory:"
+    ls -la "$(Build.ArtifactStagingDirectory)"
+    echo "Contenido de Build.ArtifactStagingDirectory/publish:"
+    ls -la "$(Build.ArtifactStagingDirectory)/publish"
+  displayName: 'Listar contenido del directorio de artefactos y publish'
+
+# Paso 4: Desplegar a Azure App Service
+- task: AzureWebApp@1
+  displayName: 'Desplegar a Azure App Service'
+  inputs:
+    azureSubscription: 'WebAppHotelAPIDemo'  # Nombre de tu conexión de Azure
+    appType: 'webApp'  # Tipo de aplicación: webApp para una aplicación web
+    appName: 'WebAppServiceHotelDemo'  # Nombre de tu aplicación en Azure
+    package: '$(Build.ArtifactStagingDirectory)/publish/HotelUltraGroup.Presentation.API.zip'  # Ruta del archivo publicado
+    deploymentMethod: 'zipDeploy'  # Método de despliegue: auto (zipDeploy o Kudu)
+
+# Paso 5: Validación final (opcional)
+- script: |
+    echo "Validación completada. El despliegue se realizó correctamente."
+  displayName: 'Mensaje de confirmación'
