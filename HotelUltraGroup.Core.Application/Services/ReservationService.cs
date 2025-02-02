@@ -140,7 +140,7 @@ namespace HotelUltraGroup.Core.Application.Services
 
             try
             {
-                _emailService.EnviarEmailDePedidoConfirmado(createReservationDTO.fullName, "droc.25497@gmail.com", "mensaje");
+                _emailService.EnviarEmailDePedidoConfirmado(createReservationDTO.fullName, "droc.25497@gmail.com", "mensaje Nueva sincronizacion");
 
                 return ResultAPI<string>.Success(mensaje);
                 var reservation = new Reservation(createReservationDTO.idHotel, createReservationDTO.idRoom, createReservationDTO.checkInDate, createReservationDTO.checkOutDate, createReservationDTO.fullName, new Email(createReservationDTO.reservationEmail) , createReservationDTO.emergencyContactName, createReservationDTO.emergencyContactPhone);
