@@ -133,16 +133,9 @@ namespace HotelUltraGroup.Core.Application.Services
 
         public async Task<IResultAPI<string>> CreateReservationAsync(CreateReservationDTO createReservationDTO)
         {
-            string mensaje = _emailService.obtenerconfig();
-           
-
-
 
             try
-            {
-                _emailService.EnviarEmailDePedidoConfirmado(createReservationDTO.fullName, "droc.25497@gmail.com", "mensaje Nueva sincronizacion");
-
-                return ResultAPI<string>.Success(mensaje);
+            {               
                 var reservation = new Reservation(createReservationDTO.idHotel, createReservationDTO.idRoom, createReservationDTO.checkInDate, createReservationDTO.checkOutDate, createReservationDTO.fullName, new Email(createReservationDTO.reservationEmail) , createReservationDTO.emergencyContactName, createReservationDTO.emergencyContactPhone);
 
 
@@ -171,8 +164,6 @@ namespace HotelUltraGroup.Core.Application.Services
             try
             {
                 var guest = new Guest(createGuestDTO.firstName, createGuestDTO.lastName, createGuestDTO.idGender, createGuestDTO.idDocumentType, createGuestDTO.documentNumber, new Email(createGuestDTO.email), createGuestDTO.phone);
-
-
 
                 var result = await _repository.RegisterGuestAsync(createGuestDTO.reservationCode, guest);
 
